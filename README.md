@@ -12,12 +12,12 @@
 sudo apt-get update && sudo apt-get upgrade -y
 ```
 
-# Gerekli araçların yüklemesini yapıyoruz.
+# Gerekli araçları yüklüyoruz.
 ```
 sudo apt install build-essential git unzip curl wget
 ```
 
-# Go kurulumumuzu yapıyoruz: 
+# Go kurulumu yapıyoruz: 
 ```
 wget -O go1.18.1.linux-amd64.tar.gz https://golang.org/dl/go1.18.1.linux-amd64.tar.gz
 rm -rf /usr/local/go && tar -C /usr/local -xzf go1.18.1.linux-amd64.tar.gz && rm go1.18.1.linux-amd64.tar.gz
@@ -39,7 +39,7 @@ cd $HOME/kujira-core
 make install
 ```
 
-# Binary dosyanın çalıştığını kontrol ederiz. Aşşağıdaki gibi "0.3.0" çıktısı almanız gerekli.
+# Binary dosyasının çalıştığını kontrol ederiz. Aşşağıdaki gibi "0.3.0" çıktısı almanız gerekli.
 ```
 kujirad version
 ```
@@ -53,7 +53,7 @@ export CHAIN_ID=harpoon-3
 export MONIKER_NAME="moniker-name"
 ```
 
-# Bu komutla birlikte çıkan bilgileri bir yere not edelim
+# Bu komutla birlikte çıkan bilgileri bir yere not edelim.
 ```
 kujirad init "${MONIKER_NAME}" --chain-id ${CHAIN_ID}
 ```
@@ -68,20 +68,20 @@ wget https://raw.githubusercontent.com/Team-Kujira/networks/master/testnet/harpo
 wget https://raw.githubusercontent.com/Team-Kujira/networks/master/testnet/addrbook.json -O $HOME/.kujira/config/addrbook.json
 ```
 
-# Screen aracımızı indirip. kujira isimli bir screen oluşturuyoruz
+# Screen aracımızı indirip, kujira isimli bir screen oluşturuyoruz
 ```
 apt-get install screen
 screen -S kujira
 ```
 
-# Screen içinde kujira node'nu başlatıyoruz. ve sync olmasını bekliyoruz. sync olmadan validator kurmayın.
+# Screen içinde kujira node'nu başlatıyoruz, ve sync olmasını bekliyoruz. SYNC OLMADAN VALİDATÖR KURMAYIN.
 ```
 kujirad start
 ```
 
-Sync olması için ulaşmanız gereken blok sayısı burada https://testnets.cosmosrun.info/kujira-harpoon-3/ yazıyor: 
+Sync olması için ulaşmanız gereken blok sayısı burada yazıyor https://testnets.cosmosrun.info/kujira-harpoon-3/  
 
-# Sync olduğumuzu kontrol edebilmek aşşağıdaki komuttan false çıktısı almanız lazım.
+# Sync olduğumuzu kontrol edebilmek için aşağıdaki komuttan false çıktısı almamız lazım.
 
 ```
 curl http://localhost:26657/status | jq .result.sync_info.catching_up
@@ -92,7 +92,7 @@ curl http://localhost:26657/status | jq .result.sync_info.catching_up
 /etc/systemd/system/kujirad.service
 ```
 
-# Oluşturduğumuz servis dosyasının içindeyken içine aşşağıdaki komutları yapıştırıyoruz. ctrl o deyip enter'a basıp kaydettikten sonra ctrl x ile çıkıyoruz.
+# Oluşturduğumuz servis dosyasının içindeyken içine aşşağıdaki komutları yapıştırıyoruz. ctrl + o deyip enter'a basıp kaydettikten sonra ctrl + x ile çıkıyoruz.
 ```
 [Unit]
 Description=Kujira Daemon
@@ -131,7 +131,7 @@ sudo systemctl start kujirad
 systemctl status kujirad.service
 ```
 
-# Cüzdan oluşturuyoruz:
+# Cüzdan oluşturuyoruz, Cüzdan adresimizi not alıyoruz.
 ```
 kujirad keys add
 ```
@@ -158,6 +158,6 @@ kujirad tx staking create-validator --moniker="${MONIKER_NAME}" \
         --min-self-delegation=1
 ```
 
-Son olarak https://testnets.cosmosrun.info/kujira-harpoon-3/ kendimizi kontrol edelim.
+Son olarak https://testnets.cosmosrun.info/kujira-harpoon-3/ sitesinden kendimizi kontrol edelim.
 
 Teşekkürler..
