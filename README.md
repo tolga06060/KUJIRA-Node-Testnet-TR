@@ -89,26 +89,23 @@ curl http://localhost:26657/status | jq .result.sync_info.catching_up
 
 # node'umuzun sürekli çalışabilir olması için servis dosyamızı oluşturuyoruz.
 ```
-/etc/systemd/system/kujirad.service
-```
-
-# Oluşturduğumuz servis dosyasının içindeyken içine aşşağıdaki komutları yapıştırıyoruz. ctrl + o deyip enter'a basıp kaydettikten sonra ctrl + x ile çıkıyoruz.
-```
-[Unit]
-Description=Kujira Daemon
+echo "[Unit]
+Description=Kujirad Node
 After=network.target
 
 [Service]
+User=$USER
 Type=simple
-User=root
-ExecStart=/root/go/bin/kujirad --log_level error
-Restart=on-abort
+ExecStart=$(which kujirad) start
+Restart=on-failure
+LimitNOFILE=65535
 
 [Install]
-WantedBy=multi-user.target
-
-[Service]
-LimitNOFILE=65535
+WantedBy=multi-user.target" > $HOME/kujirad.service
+sudo mv $HOME/kujirad.service /etc/systemd/system
+sudo tee <<EOF >/dev/null /etc/systemd/journald.conf
+Storage=persistent
+EOF
 ```
 
 # Systemctl tekrar yüklüyoruz.
@@ -141,23 +138,22 @@ kujirad keys add
 curl -X POST https://faucet.kujira.app/YOUR_WALLET_ADDRESS
 ```
 
-# Son olarak validator oluşturuyoruz.
+# Son olarak validator oluşturuyoruz Beni cüzdan adresim olan tolga06060 yerine kendi cüzdan adınızı yazıyorsunuz.
 ```
-export PUBKEY=$( kujirad tendermint show-validator)
-kujirad tx staking create-validator --moniker="${MONIKER_NAME}" \
- --amount=1000000ukuji \
-        --gas-prices=1ukuji \
-        --pubkey=$PUBKEY \
-         --from="YOURNAME" \
-        --yes \
-        --node=tcp://localhost:26657 \
-        --chain-id=${CHAIN_ID} \
-        --commission-max-change-rate=0.01 \
-        --commission-max-rate=0.20 \
-        --commission-rate=0.10 \
-        --min-self-delegation=1
+kujirad tx staking create-validator \
+--moniker="tolga06060" \
+--amount=10000000ukuji \
+--gas-prices=1ukuji \
+--pubkey=$(kujirad tendermint show-validator) \
+--chain-id=harpoon-3 \
+--commission-max-change-rate=0.01 \
+--commission-max-rate=0.20 \
+--commission-rate=0.10 \
+--min-self-delegation=1 \
+--from=tolga06060 \
+--yes \
 ```
 
 Son olarak https://testnets.cosmosrun.info/kujira-harpoon-3/ sitesinden kendimizi kontrol edelim.
 
-Teşekkürler..
+Hepsi bu kadar...
